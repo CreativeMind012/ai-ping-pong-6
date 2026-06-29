@@ -1,5 +1,4 @@
 
-
 status = "";
 
 var paddle2 =10,paddle1=10;
@@ -26,9 +25,6 @@ rightWristY = "";
 rightWristX = "";
 scoreRightWrist = "";
 
-//Define a variable to hold the status of the game
-
- 
 
 function setup(){
 var canvas =  createCanvas(700,600);
@@ -66,7 +62,7 @@ function startGame()
 }
 
 function draw(){
-if(status = "start") // inside the if condition check if the game_status is equal to the value "start".
+if(status = "start")
 {
   background(0); 
   image(video, 0, 0, 700, 600);
@@ -102,34 +98,21 @@ if(status = "start") // inside the if condition check if the game_status is equa
     var paddle2y =ball.y-paddle2Height/2;  
     rect(paddle2Y,paddle2y,paddle2,paddle2Height,100);
     
-    //function midline call
     midline();
-    
-    //funtion drawScore call 
     drawScore();
-
-    //function models call  
     models();
-
-    //function move call which in very important
     move();
-
-   
-
     }
 
   }
 
-
-
-//function reset when ball does notcame in the contact of padde
+//function reset when ball does not come in the contact with padde
 function reset(){
    ball.x = width/2+100,
    ball.y = height/2+100;
    ball.dx=3;
    ball.dy =3;   
 }
-
 
 //function midline draw a line in center
 function midline(){
@@ -140,7 +123,6 @@ function midline(){
     rect(width/2,y+i,10,480);
     }
 }
-
 
 //function drawScore show scores
 function drawScore(){
@@ -153,7 +135,6 @@ function drawScore(){
     text("Computer:",500,50)
     text(pcscore,555,50)
 }
-
 
 //very important function of this game
 function move(){
@@ -205,7 +186,7 @@ function models(){
 }
 
 
-//this function help to not go te paddle out of canvas
+//this function helps to not let paddle get out of canvas
 function paddleInCanvas(){
   if(paddle1Y+paddle1Height > height){
     paddle1Y=height-paddle1Height;
