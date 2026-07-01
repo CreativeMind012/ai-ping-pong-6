@@ -56,12 +56,14 @@ function startGame()
   if (gameStarted) return;
   gameStarted = true;
   status = "start";
-  video = createCapture(VIDEO);
+  video = createCapture(VIDEO, function() {
+    // camera permission granted — NOW start loading the model
+    poseNet = ml5.poseNet(video, modelLoaded);
+    poseNet.on('pose', gotPoses);
+  });
   video.size(700, 600);
   video.hide();
 
-  poseNet = ml5.poseNet(video, modelLoaded);
-  poseNet.on('pose', gotPoses);
 }
 
 function draw(){
