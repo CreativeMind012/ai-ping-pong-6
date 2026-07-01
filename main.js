@@ -1,5 +1,6 @@
 
 status = "";
+var gameStarted = false;
 
 var paddle2 =10,paddle1=10;
 
@@ -21,48 +22,50 @@ var ball = {
     dy:3
 }
 
-rightWristY = "";
-rightWristX = "";
-scoreRightWrist = "";
+var rightWristY = "";
+var rightWristX = "";
+var scoreRightWrist = "";
+var video, poseNet;  
 
 
 function setup(){
 var canvas =  createCanvas(700,600);
 canvas.parent('canvas');
-
-video = createCapture(VIDEO);
-video.size(700, 600);
-video.hide();
-
-poseNet = ml5.poseNet(video, modelLoaded);
-poseNet.on('pose', gotPoses);
+noLoop();
 }
 
-function modelLoaded() {
-  console.log('Model loaded!');
+function modelLoaded() 
+{
+    console.log('Model loaded!');
+    loop();
 }
 
 function gotPoses(results)
 {
   if(results.length > 0)
   {
-    console.log(results)
     rightWristY = results[0].pose.rightWrist.y;
     rightWristX = results[0].pose.rightWrist.x;
     scoreRightWrist =  results[0].pose.keypoints[10].score;
-    console.log(scoreRightWrist);
   }
 }
 
 
 function startGame()
 {
+  if (gameStarted) return;
+  gameStarted = true;
   status = "start";
-  document.getElementById(status).innerHTML = "Game is Loaded";
+  video = createCapture(VIDEO);
+  video.size(700, 600);
+  video.hide();
+
+  poseNet = ml5.poseNet(video, modelLoaded);
+  poseNet.on('pose', gotPoses);
 }
 
 function draw(){
-if(status = "start")
+if(status == "start")
 {
   background(0); 
   image(video, 0, 0, 700, 600);
@@ -108,7 +111,7 @@ if(status = "start")
 
 //function reset when ball does not come in the contact with padde
 function reset(){
-   ball.x = width/2+100,
+   ball.x = width/2+100;
    ball.y = height/2+100;
    ball.dx=3;
    ball.dy =3;   
@@ -117,10 +120,9 @@ function reset(){
 //function midline draw a line in center
 function midline(){
     for(i=0;i<480;i+=10) {
-    var y = 0;
     fill("white");
     stroke(0);
-    rect(width/2,y+i,10,480);
+    rect(width/2,i,10,480);
     }
 }
 
@@ -129,11 +131,11 @@ function drawScore(){
     textAlign(CENTER);
     textSize(20);
     fill("white");
-    stroke(250,0,0)
-    text("Player:",100,50)
+    stroke(250,0,0);
+    text("Player:",100,50);
     text(playerscore,140,50);
-    text("Computer:",500,50)
-    text(pcscore,555,50)
+    text("Computer:",500,50);
+    text(pcscore,555,50);
 }
 
 //very important function of this game
@@ -165,12 +167,12 @@ if(pcscore ==4){
     stroke("white");
     textSize(25);
     text("Game Over!",width/2,height/2);
-    text("RRestart to play again!",width/2,height/2+30);
+    text("Restart to play again!",width/2,height/2+30);
     noLoop();
     pcscore = 0;
  }
    if(ball.y+ball.r > height || ball.y-ball.r <0){
-       ball.dy =- ball.dy;
+       ball.dy = -ball.dy;
    }   
 }
 
@@ -199,6 +201,8 @@ function paddleInCanvas(){
 
 function restart() {
   pcscore = 0;
+  gameStarted = false;
+  status = "";  
   playerscore = 0;
   loop();
 }
